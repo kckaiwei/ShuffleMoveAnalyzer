@@ -33,11 +33,11 @@ public class FrameGui extends JFrame {
 	int[] pokeMatchCheck = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-	int[] pokeValue = { 1, 2, 3, 2, 1, 2, 3, 1, 2, 1, 2, 2, 1, 3, 3, 2, 2, 1,
-			1, 3, 2, 3, 3, 2, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 2, 1 };
-	
-	int[] compareValues = { 1, 2, 3, 2, 1, 2, 3, 1, 2, 1, 2, 2, 1, 3, 3, 2, 2, 1,
-			1, 3, 2, 3, 3, 2, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 2, 1 };
+	int[] pokeValue = { 1, 2, 3, 3, 4, 2, 2, 1, 2, 4, 2, 2, 1, 3, 3, 4, 2, 1,
+			3, 3, 4, 3, 3, 2, 2, 1, 3, 4, 1, 2, 3, 1, 2, 4, 2, 1 };
+
+	int[] compareValues = { 1, 2, 3, 2, 1, 2, 3, 1, 2, 1, 2, 2, 1, 3, 3, 2, 2,
+			1, 1, 3, 2, 3, 3, 2, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 2, 1 };
 	// 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 2, 1, 2, 1, 2, 2,
 	// 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2
 	// 1,2,3,2,1,2,3,1,2,1,2,2,1,3,2,2,3,1, 1,3,2,3,3,1, 2,1,3,2,1,2,
@@ -146,6 +146,7 @@ public class FrameGui extends JFrame {
 			currentSettingLabel.setText("Currently set to: " + selectionNumber);
 		}
 	}
+
 	public class set4ActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
@@ -166,7 +167,8 @@ public class FrameGui extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
+			highestSuccesses = 0;
+			successes = 0;
 			for (int i = 0; i < pokeValue.length; i++) {
 
 				// save values prior to swap
@@ -199,8 +201,8 @@ public class FrameGui extends JFrame {
 				for (int values = 0; values < pokeValue.length; values++) {
 					newHolderValue[values] = pokeValue[values];
 				}
-				
-				for (int comparisonNumber = 0; comparisonNumber < newHolderValue.length; comparisonNumber++){
+
+				for (int comparisonNumber = 0; comparisonNumber < newHolderValue.length; comparisonNumber++) {
 					compareValues[comparisonNumber] = newHolderValue[comparisonNumber];
 				}
 				// resets value for next run
@@ -222,6 +224,8 @@ public class FrameGui extends JFrame {
 		if (successes > highestSuccesses) {
 			buttonChangeColor1 = tempButtonChangeColor1;
 			buttonChangeColor2 = tempButtonChangeColor2;
+			//troubleshooting
+			System.out.println(successes);
 			// copies over
 			for (int i = 0; i < placeHolder.length; i++) {
 				placeHolder[i] = newHolderValue[i];
@@ -246,25 +250,28 @@ public class FrameGui extends JFrame {
 				// check columns
 				for (int j = 0; j < 6; j++) {
 					if (j < 4) {
-						if (pokeMatchCheck[i + j] != 0) {
-							if (pokeMatchCheck[i + j] == pokeMatchCheck[i + j + 1]
-									&& pokeMatchCheck[i + j] == pokeMatchCheck[i + j + 2]) {
-								matchMark[i + j] = 1;
-								matchMark[i + j + 1] = 1;
-								matchMark[i + j + 2] = 1;
+						if (pokeMatchCheck[(i*6) + j] != 0) {
+							if (pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6) + j
+									+ 1]
+									&& pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6)
+											+ j + 2]) {
+								matchMark[(i*6) + j] = 1;
+								matchMark[(i*6) + j + 1] = 1;
+								matchMark[(i*6) + j + 2] = 1;
 								// this.setRemovable();
 								somethingWasRemoved = true;
 								if (j < 3) {
-									if (pokeMatchCheck[i + j] == pokeMatchCheck[i + j + 3]) {
-										matchMark[i + j + 3] = 1;
+									if (pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6)
+											+ j + 3]) {
+										matchMark[(i*6) + j + 3] = 1;
 										if (j < 2) {
-											if (pokeMatchCheck[i + j] == pokeMatchCheck[i
+											if (pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6)
 													+ j + 4]) {
-												matchMark[i + j + 4] = 1;
+												matchMark[(i*6) + j + 4] = 1;
 												if (j < 1) {
-													if (pokeMatchCheck[i + j] == pokeMatchCheck[i
+													if (pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6)
 															+ j + 5]) {
-														matchMark[i + j + 5] = 1;
+														matchMark[(i*6) + j + 5] = 1;
 													}
 												}
 											}
@@ -297,7 +304,8 @@ public class FrameGui extends JFrame {
 													+ ((k + 4) * 6)]) {
 												matchMark[i + ((k + 4) * 6)] = 1;
 												if (k < 1) {
-													if (pokeMatchCheck[i + (k * 6)] == pokeMatchCheck[i
+													if (pokeMatchCheck[i
+															+ (k * 6)] == pokeMatchCheck[i
 															+ ((k + 5) * 6)]) {
 														matchMark[i
 																+ ((k + 5) * 6)] = 1;
@@ -339,13 +347,9 @@ public class FrameGui extends JFrame {
 			//
 			// buttonList.add(clicky);
 			// }
-			System.out.println(successes);
-			for (int i = 0; i < 36; i++) {
 
-				System.out.print(pokeValue[i]);
 			}
 		}
-	}
 
 	// redraw buttons
 	public void setFinal() {
@@ -360,9 +364,7 @@ public class FrameGui extends JFrame {
 			}
 		}
 		repaint();
-		System.out.println(tempButtonChangeColor1);
-		System.out.println(tempButtonChangeColor2);
-		for (int i = 0; i < pokeValue.length; i++){
+		for (int i = 0; i < pokeValue.length; i++) {
 			pokeValue[i] = placeHolder[i];
 		}
 
