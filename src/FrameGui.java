@@ -3,9 +3,16 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,7 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class FrameGui extends JFrame {
+public class FrameGui extends JFrame implements ActionListener {
 	JPanel mainPanel;
 	JLabel currentSettingLabel;
 	JFrame frame;
@@ -25,6 +32,7 @@ public class FrameGui extends JFrame {
 	int buttonChangeColor2;
 	int tempButtonChangeColor1;
 	int tempButtonChangeColor2;
+	int[] saveState;
 
 	// holds the pokeValue before swap
 	int[] holderPokeValue = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -70,24 +78,39 @@ public class FrameGui extends JFrame {
 
 		frame.setSize(800, 800);
 		frame.setVisible(true);
+		frame.addKeyListener(new keyListener());
+		frame.setFocusable(true);
 
 		// settings button box
 		Box settingBox = new Box(BoxLayout.Y_AXIS);
 		JButton set0 = new JButton("Set 0");
 		set0.addActionListener(new set0ActionListener());
 		settingBox.add(set0);
+		set0.setFocusable(false);
 		JButton set1 = new JButton("Set 1");
 		set1.addActionListener(new set1ActionListener());
 		settingBox.add(set1);
+		set1.setFocusable(false);
 		JButton set2 = new JButton("Set 2");
 		set2.addActionListener(new set2ActionListener());
 		settingBox.add(set2);
+		set2.setFocusable(false);
 		JButton set3 = new JButton("Set 3");
 		set3.addActionListener(new set3ActionListener());
 		settingBox.add(set3);
+		set3.setFocusable(false);
 		JButton set4 = new JButton("Set 4");
 		set4.addActionListener(new set4ActionListener());
 		settingBox.add(set4);
+		set4.setFocusable(false);
+		JButton saveButton = new JButton("Save");
+		saveButton.addActionListener(new SaveButtonActionListener());
+		settingBox.add(saveButton);
+		saveButton.setFocusable(false);
+		JButton loadButton = new JButton("Load");
+		loadButton.addActionListener(new LoadButtonActionListener());
+		settingBox.add(loadButton);
+		loadButton.setFocusable(false);
 
 		background.add(BorderLayout.EAST, settingBox);
 
@@ -97,12 +120,14 @@ public class FrameGui extends JFrame {
 		JButton shuffle = new JButton("Shuffle!");
 		shuffle.addActionListener(new shuffleListener());
 		background.add(BorderLayout.SOUTH, shuffle);
+		shuffle.setFocusable(false);
 
 		for (int i = 0; i < 36; i++) {
 			JButton clicky = new JButton();
 			clicky.setText(String.valueOf(pokeValue[i]));
 			clicky.addActionListener(new gridActionListener());
 			clicky.setBackground(Color.gray);
+			clicky.setFocusable(false);
 
 			buttonList.add(clicky);
 			mainPanel.add(clicky);
@@ -162,6 +187,46 @@ public class FrameGui extends JFrame {
 		}
 	}
 
+	// save feature
+	public class SaveButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int[] saveState = new int[36];
+
+			for (int i = 0; i < 36; i++) {
+				saveState[i] = pokeValue[i];
+			}
+
+			try {
+				FileOutputStream fileStream = new FileOutputStream(new File(
+						"pokeShuffleSave.pks"));
+				ObjectOutputStream os = new ObjectOutputStream(fileStream);
+				os.writeObject(saveState);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public class LoadButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int[] saveState = null;
+			try {
+				FileInputStream fileIn = new FileInputStream(new File(
+						"pokeShuffleSave.pks"));
+				ObjectInputStream is = new ObjectInputStream(fileIn);
+				saveState = (int[]) is.readObject();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			for (int i = 0; i < 36; i++) {
+				pokeValue[i] = saveState[i];
+				placeHolder[i] = saveState[i];
+			}
+			setFinal(false);
+		}
+	}
+
 	public class shuffleListener implements ActionListener {
 		int highestSuccesses = 0;
 
@@ -181,7 +246,7 @@ public class FrameGui extends JFrame {
 
 			}
 			// displays
-			setFinal();
+			setFinal(true);
 
 		}
 	}
@@ -224,7 +289,7 @@ public class FrameGui extends JFrame {
 		if (successes > highestSuccesses) {
 			buttonChangeColor1 = tempButtonChangeColor1;
 			buttonChangeColor2 = tempButtonChangeColor2;
-			//troubleshooting
+			// troubleshooting
 			System.out.println(successes);
 			// copies over
 			for (int i = 0; i < placeHolder.length; i++) {
@@ -250,28 +315,30 @@ public class FrameGui extends JFrame {
 				// check columns
 				for (int j = 0; j < 6; j++) {
 					if (j < 4) {
-						if (pokeMatchCheck[(i*6) + j] != 0) {
-							if (pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6) + j
-									+ 1]
-									&& pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6)
+						if (pokeMatchCheck[(i * 6) + j] != 0) {
+							if (pokeMatchCheck[(i * 6) + j] == pokeMatchCheck[(i * 6)
+									+ j + 1]
+									&& pokeMatchCheck[(i * 6) + j] == pokeMatchCheck[(i * 6)
 											+ j + 2]) {
-								matchMark[(i*6) + j] = 1;
-								matchMark[(i*6) + j + 1] = 1;
-								matchMark[(i*6) + j + 2] = 1;
+								matchMark[(i * 6) + j] = 1;
+								matchMark[(i * 6) + j + 1] = 1;
+								matchMark[(i * 6) + j + 2] = 1;
 								// this.setRemovable();
 								somethingWasRemoved = true;
 								if (j < 3) {
-									if (pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6)
+									if (pokeMatchCheck[(i * 6) + j] == pokeMatchCheck[(i * 6)
 											+ j + 3]) {
-										matchMark[(i*6) + j + 3] = 1;
+										matchMark[(i * 6) + j + 3] = 1;
 										if (j < 2) {
-											if (pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6)
+											if (pokeMatchCheck[(i * 6) + j] == pokeMatchCheck[(i * 6)
 													+ j + 4]) {
-												matchMark[(i*6) + j + 4] = 1;
+												matchMark[(i * 6) + j + 4] = 1;
 												if (j < 1) {
-													if (pokeMatchCheck[(i*6) + j] == pokeMatchCheck[(i*6)
+													if (pokeMatchCheck[(i * 6)
+															+ j] == pokeMatchCheck[(i * 6)
 															+ j + 5]) {
-														matchMark[(i*6) + j + 5] = 1;
+														matchMark[(i * 6) + j
+																+ 5] = 1;
 													}
 												}
 											}
@@ -335,9 +402,15 @@ public class FrameGui extends JFrame {
 
 			// dropping of blocks
 			for (int i = 35; i > 5; i--) {
-				if (pokeMatchCheck[i] == 0) {
-					pokeMatchCheck[i] = pokeMatchCheck[i - 6];
-					pokeMatchCheck[i - 6] = 0;
+				for (int j = 0; j < 6; j++) {
+					if (i - (j * 6) >= 0) {
+						if (pokeMatchCheck[i - (j * 6)] == 0) {
+							if (((i - (j * 6)) - 6) >= 0) {
+								pokeMatchCheck[i - (j * 6)] = pokeMatchCheck[(i - (j * 6)) - 6];
+								pokeMatchCheck[(i - (j * 6)) - 6] = 0;
+							}
+						}
+					}
 				}
 			}
 
@@ -348,25 +421,69 @@ public class FrameGui extends JFrame {
 			// buttonList.add(clicky);
 			// }
 
-			}
 		}
+	}
 
 	// redraw buttons
-	public void setFinal() {
+	public void setFinal(boolean ifToColor) {
 		int buttonCount = -1;
 		for (JButton B1 : buttonList) {
 			buttonCount++;
 			B1.setText(String.valueOf(placeHolder[buttonCount]));
 			B1.setBackground(Color.gray);
-			if (buttonCount == buttonChangeColor1
-					|| buttonCount == buttonChangeColor2) {
-				B1.setBackground(Color.RED);
+			if (ifToColor == true) {
+				if (buttonCount == buttonChangeColor1
+						|| buttonCount == buttonChangeColor2) {
+					B1.setBackground(Color.RED);
+				}
 			}
 		}
 		repaint();
 		for (int i = 0; i < pokeValue.length; i++) {
 			pokeValue[i] = placeHolder[i];
 		}
+	}
 
+	private class keyListener extends KeyAdapter {
+		public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			int key = e.getKeyCode();
+
+			if (key == KeyEvent.VK_0) {
+				selectionNumber = 0;
+				currentSettingLabel.setText("Currently set to: "
+						+ selectionNumber);
+			}
+			if (key == KeyEvent.VK_1) {
+				selectionNumber = 1;
+				currentSettingLabel.setText("Currently set to: "
+						+ selectionNumber);
+			}
+
+			if (key == KeyEvent.VK_2) {
+				selectionNumber = 2;
+				currentSettingLabel.setText("Currently set to: "
+						+ selectionNumber);
+			}
+
+			if (key == KeyEvent.VK_3) {
+				selectionNumber = 3;
+				currentSettingLabel.setText("Currently set to: "
+						+ selectionNumber);
+			}
+
+			if (key == KeyEvent.VK_4) {
+				selectionNumber = 4;
+				currentSettingLabel.setText("Currently set to: "
+						+ selectionNumber);
+			}
+
+		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
