@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,7 +24,11 @@ public class FrameGui extends JFrame implements ActionListener {
 	JPanel mainPanel;
 	JLabel currentSettingLabel;
 	JFrame frame;
+	JPanel selectionMainPanel;
+	JPanel selectionPanel;
+	JFrame selectionFrame;
 	ArrayList<JButton> buttonList;
+	ArrayList<JButton> selectionButtonList;
 	boolean somethingWasRemoved;
 	int highestSuccesses;
 	int successes;
@@ -111,6 +115,10 @@ public class FrameGui extends JFrame implements ActionListener {
 		loadButton.addActionListener(new LoadButtonActionListener());
 		settingBox.add(loadButton);
 		loadButton.setFocusable(false);
+		JButton selectionButton = new JButton("Select Pokemon");
+		selectionButton.addActionListener(new selectionFrameActionListener());
+		settingBox.add(selectionButton);
+		selectionButton.setFocusable(false);
 
 		background.add(BorderLayout.EAST, settingBox);
 
@@ -126,7 +134,7 @@ public class FrameGui extends JFrame implements ActionListener {
 			JButton clicky = new JButton();
 			clicky.setText(String.valueOf(pokeValue[i]));
 			clicky.addActionListener(new gridActionListener());
-			clicky.setBackground(Color.gray);
+			clicky.setBackground(Color.white);
 			clicky.setFocusable(false);
 
 			buttonList.add(clicky);
@@ -139,6 +147,45 @@ public class FrameGui extends JFrame implements ActionListener {
 	// public void setRemovable() {
 	// somethingWasRemoved = true;
 	// }
+
+	public class selectionFrameActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			selectionButtonList = new ArrayList<JButton>();
+
+			selectionFrame = new JFrame();
+			selectionFrame.setVisible(true);
+			selectionFrame.setSize(1000,1000);
+
+			GridLayout selectionGrid = new GridLayout(17, 17);
+			//selectionGrid.setVgap(1);
+			//selectionGrid.setHgap(1);
+
+			BorderLayout selectionLayout = new BorderLayout();
+			JPanel selectionBackground = new JPanel(selectionLayout);
+			selectionMainPanel = new JPanel(selectionGrid);
+			selectionFrame.getContentPane().add(selectionBackground);
+			selectionBackground.add(BorderLayout.CENTER, selectionMainPanel);
+
+			for (int i = 0; i < 1000; i++) {
+				JButton selectionClicky = new JButton();
+				if (i < 10) {
+					selectionClicky.setIcon(new ImageIcon("src/img/32px-Shuffle" + "00"
+							+ i + ".png"));
+				}
+				if (i < 100){
+					selectionClicky.setIcon(new ImageIcon("src/img/32px-Shuffle"+ "0"
+							+ i + ".png"));
+				}
+				if (i < 1000){
+					selectionClicky.setIcon(new ImageIcon("src/img/32px-Shuffle"
+							+ i + ".png"));
+				}
+				selectionClicky.setFocusable(false);
+				selectionMainPanel.add(selectionClicky);
+				selectionButtonList.add(selectionClicky);
+			}
+		}
+	}
 
 	public class set0ActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
@@ -430,7 +477,7 @@ public class FrameGui extends JFrame implements ActionListener {
 		for (JButton B1 : buttonList) {
 			buttonCount++;
 			B1.setText(String.valueOf(placeHolder[buttonCount]));
-			B1.setBackground(Color.gray);
+			B1.setBackground(Color.white);
 			if (ifToColor == true) {
 				if (buttonCount == buttonChangeColor1
 						|| buttonCount == buttonChangeColor2) {
@@ -484,6 +531,6 @@ public class FrameGui extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
