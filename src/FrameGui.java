@@ -106,21 +106,45 @@ public class FrameGui extends JFrame implements ActionListener {
 		settingBox.add(set0);
 		set0.setFocusable(false);
 		JButton set1 = new JButton("Set 1");
+		set1.setIcon(new ImageIcon(
+				"src/img/Shuffle"
+						+ (String
+								.valueOf(savedSelectionInteger[1]) + ".png")));
 		set1.addActionListener(new set1ActionListener());
 		settingBox.add(set1);
 		set1.setFocusable(false);
 		JButton set2 = new JButton("Set 2");
+		set2.setIcon(new ImageIcon(
+				"src/img/Shuffle"
+						+ (String
+								.valueOf(savedSelectionInteger[2]) + ".png")));
 		set2.addActionListener(new set2ActionListener());
 		settingBox.add(set2);
 		set2.setFocusable(false);
 		JButton set3 = new JButton("Set 3");
+		set3.setIcon(new ImageIcon(
+				"src/img/Shuffle"
+						+ (String
+								.valueOf(savedSelectionInteger[3]) + ".png")));
 		set3.addActionListener(new set3ActionListener());
 		settingBox.add(set3);
 		set3.setFocusable(false);
 		JButton set4 = new JButton("Set 4");
+		set4.setIcon(new ImageIcon(
+				"src/img/Shuffle"
+						+ (String
+								.valueOf(savedSelectionInteger[4]) + ".png")));
 		set4.addActionListener(new set4ActionListener());
 		settingBox.add(set4);
 		set4.setFocusable(false);
+		JButton set5 = new JButton("Set 5");
+		set5.setIcon(new ImageIcon(
+				"src/img/Shuffle"
+						+ (String
+								.valueOf(savedSelectionInteger[5]) + ".png")));
+		set5.addActionListener(new set5ActionListener());
+		settingBox.add(set5);
+		set5.setFocusable(false);
 		JButton saveButton = new JButton("Save");
 		saveButton.addActionListener(new SaveButtonActionListener());
 		settingBox.add(saveButton);
@@ -266,6 +290,13 @@ public class FrameGui extends JFrame implements ActionListener {
 		}
 	}
 
+	public class set5ActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			selectionNumber = 5;
+			currentSettingLabel.setText("Currently set to: " + selectionNumber);
+		}
+	}
 	// changes grid text
 	public class gridActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
