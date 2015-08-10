@@ -72,22 +72,22 @@ public class SelectionConfirmation extends JFrame{
 			switch (buttonName){
 			
 			case "set1":
-				FrameGui.savedSelectionInteger1 = FrameGui.savedSelectionIntegerSelector;
+				FrameGui.savedSelectionInteger[1] = FrameGui.savedSelectionIntegerSelector;
 				break;
 			case "set2":
-				FrameGui.savedSelectionInteger2 = FrameGui.savedSelectionIntegerSelector;
+				FrameGui.savedSelectionInteger[2] = FrameGui.savedSelectionIntegerSelector;
 				break;
 			case "set3":
-				FrameGui.savedSelectionInteger3 = FrameGui.savedSelectionIntegerSelector;
+				FrameGui.savedSelectionInteger[3] = FrameGui.savedSelectionIntegerSelector;
 				break;
 			case "set4":
-				FrameGui.savedSelectionInteger4 = FrameGui.savedSelectionIntegerSelector;
+				FrameGui.savedSelectionInteger[4] = FrameGui.savedSelectionIntegerSelector;
 				break;
 			case "set5":
-				FrameGui.savedSelectionInteger5 = FrameGui.savedSelectionIntegerSelector;
+				FrameGui.savedSelectionInteger[5] = FrameGui.savedSelectionIntegerSelector;
 				break;
 			case "set6":
-				FrameGui.savedSelectionInteger6 = FrameGui.savedSelectionIntegerSelector;
+				FrameGui.savedSelectionInteger[6] = FrameGui.savedSelectionIntegerSelector;
 				break;
 			
 			}

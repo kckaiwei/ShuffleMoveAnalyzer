@@ -42,6 +42,7 @@ public class FrameGui extends JFrame implements ActionListener {
 	int tempButtonChangeColor1;
 	int tempButtonChangeColor2;
 	int[] saveState;
+	static int[] savedSelectionInteger = { 1, 2, 3, 4, 5, 6, 7, 8 };
 	static int savedSelectionInteger1 = 1;
 	static int savedSelectionInteger2 = 2;
 	static int savedSelectionInteger3 = 3;
@@ -146,7 +147,10 @@ public class FrameGui extends JFrame implements ActionListener {
 		for (int i = 0; i < 36; i++) {
 			JButton clicky = new JButton();
 			clicky.setText(String.valueOf(pokeValue[i]));
-			clicky.setIcon(new ImageIcon("src/img/Shuffle" + (String.valueOf(pokeValue[i]) + ".png")));
+			clicky.setIcon(new ImageIcon(
+					"src/img/Shuffle"
+							+ (String
+									.valueOf(savedSelectionInteger[pokeValue[i]]) + ".png")));
 			clicky.addActionListener(new gridActionListener());
 			clicky.setBackground(Color.white);
 			clicky.setFocusable(false);
@@ -214,9 +218,11 @@ public class FrameGui extends JFrame implements ActionListener {
 	// set pokemon choice filepath
 	public class selectionClickyActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			savedSelectionIntegerSelector = selectionButtonList.indexOf(e.getSource())+1;
+			savedSelectionIntegerSelector = selectionButtonList.indexOf(e
+					.getSource()) + 1;
 			SelectionConfirmation selector = new SelectionConfirmation();
 			selector.go();
+			selectionFrame.dispose();
 		}
 	}
 
@@ -265,6 +271,11 @@ public class FrameGui extends JFrame implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			((JButton) e.getSource()).setText(String.valueOf(selectionNumber));
 			pokeValue[buttonList.indexOf((JButton) e.getSource())] = selectionNumber;
+			((JButton) e.getSource())
+					.setIcon(new ImageIcon(
+							"src/img/Shuffle"
+									+ (String
+											.valueOf(savedSelectionInteger[selectionNumber]) + ".png")));
 		}
 	}
 
@@ -510,8 +521,9 @@ public class FrameGui extends JFrame implements ActionListener {
 		int buttonCount = -1;
 		for (JButton B1 : buttonList) {
 			buttonCount++;
-			//B1.setText(String.valueOf(placeHolder[buttonCount]));
-			B1.setIcon(new ImageIcon("src/img/Shuffle" + (String.valueOf(placeHolder[buttonCount]) + ".png")));
+			B1.setText(String.valueOf(placeHolder[buttonCount]));
+			B1.setIcon(new ImageIcon("src/img/Shuffle"
+					+ (String.valueOf(savedSelectionInteger[placeHolder[buttonCount]]) + ".png")));
 			B1.setBackground(Color.white);
 			if (ifToColor == true) {
 				if (buttonCount == buttonChangeColor1
