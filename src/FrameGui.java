@@ -42,7 +42,14 @@ public class FrameGui extends JFrame implements ActionListener {
 	int tempButtonChangeColor1;
 	int tempButtonChangeColor2;
 	int[] saveState;
-	String savedSelectionPath;
+	static int savedSelectionInteger1 = 1;
+	static int savedSelectionInteger2 = 2;
+	static int savedSelectionInteger3 = 3;
+	static int savedSelectionInteger4 = 4;
+	static int savedSelectionInteger5 = 5;
+	static int savedSelectionInteger6 = 6;
+	static String savedSelectionPath;
+	static int savedSelectionIntegerSelector;
 
 	// holds the pokeValue before swap
 	int[] holderPokeValue = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -139,6 +146,7 @@ public class FrameGui extends JFrame implements ActionListener {
 		for (int i = 0; i < 36; i++) {
 			JButton clicky = new JButton();
 			clicky.setText(String.valueOf(pokeValue[i]));
+			clicky.setIcon(new ImageIcon("src/img/Shuffle" + (String.valueOf(pokeValue[i]) + ".png")));
 			clicky.addActionListener(new gridActionListener());
 			clicky.setBackground(Color.white);
 			clicky.setFocusable(false);
@@ -162,7 +170,7 @@ public class FrameGui extends JFrame implements ActionListener {
 			selectionFrame.setVisible(true);
 			selectionFrame.setSize(1000, 1000);
 
-			GridLayout selectionGrid = new GridLayout(30, 10);
+			GridLayout selectionGrid = new GridLayout(25, 15);
 			// selectionGrid.setVgap(1);
 			// selectionGrid.setHgap(1);
 
@@ -172,29 +180,32 @@ public class FrameGui extends JFrame implements ActionListener {
 			selectionFrame.getContentPane().add(selectionBackground);
 			selectionBackground.add(BorderLayout.CENTER, selectionMainPanel);
 
-			for (int i = 1; i < 1000; i++) {
+			for (int i = 1; i < 300; i++) {
 				JButton selectionClicky = new JButton();
-				String path = String.format("/img/32px-Shuffle%03d.png", i);
-				URL resource = getClass().getResource(path);
-				if (resource != null) {
-					BufferedImage img = null;
-					try {
-						img = ImageIO.read(resource);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					selectionClicky.setIcon(new ImageIcon(img));
-				}
+				// String path = String.format("/img/32px-Shuffle%03d.png", i);
+				// URL resource = getClass().getResource(path);
+				// if (resource != null) {
+				// BufferedImage img = null;
+				// try {
+				// img = ImageIO.read(resource);
+				// } catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
+				// selectionClicky.setIcon(new ImageIcon(img));
+				// }
 
+				selectionClicky.setIcon(new ImageIcon("src/img/Shuffle" + i
+						+ ".png"));
 				selectionClicky.setFocusable(false);
 				selectionClicky
 						.addActionListener(new selectionClickyActionListener());
 				selectionMainPanel.add(selectionClicky);
 
 				selectionButtonList.add(selectionClicky);
-				//Not Working!!!
-//				selectionStringList.add(path);
+
+				// Not Working!!!
+				// selectionStringList.add(path);
 
 			}
 		}
@@ -203,8 +214,9 @@ public class FrameGui extends JFrame implements ActionListener {
 	// set pokemon choice filepath
 	public class selectionClickyActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			savedSelectionPath = String.valueOf(selectionStringList
-					.indexOf((JButton) e.getSource()));
+			savedSelectionIntegerSelector = selectionButtonList.indexOf(e.getSource())+1;
+			SelectionConfirmation selector = new SelectionConfirmation();
+			selector.go();
 		}
 	}
 
@@ -498,7 +510,8 @@ public class FrameGui extends JFrame implements ActionListener {
 		int buttonCount = -1;
 		for (JButton B1 : buttonList) {
 			buttonCount++;
-			B1.setText(String.valueOf(placeHolder[buttonCount]));
+			//B1.setText(String.valueOf(placeHolder[buttonCount]));
+			B1.setIcon(new ImageIcon("src/img/Shuffle" + (String.valueOf(placeHolder[buttonCount]) + ".png")));
 			B1.setBackground(Color.white);
 			if (ifToColor == true) {
 				if (buttonCount == buttonChangeColor1
